@@ -14,19 +14,20 @@
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            color: #222;
-        }
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #2f3640;
+    color: #222;
+}
 
         .navbar {
-            background: white;
-            border-bottom: 1px solid #ddd;
-            padding: 18px 40px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+    background: #39424e;
+    color: #f1f3f5;
+    border-bottom: 1px solid #4b5563;
+    padding: 18px 40px;
+    font-size: 20px;
+    font-weight: bold;
+}
 
         .container {
             max-width: 1100px;
@@ -41,15 +42,13 @@
             margin-bottom: 25px;
         }
 
-        h1 {
-            margin: 0 0 8px;
-            font-size: 32px;
-        }
+     h1 {
+    color: #f3f4f6;
+}
 
-        .subtitle {
-            margin: 0;
-            color: #666;
-        }
+.subtitle {
+    color: #cbd5e1;
+}
 
         .add-button {
             background: #2563eb;
@@ -69,28 +68,31 @@
         }
 
         .table-box {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    background: #39424e;
+    border: 1px solid #4b5563;
+    border-radius: 8px;
+    overflow: hidden;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-        th {
-            background: #fafafa;
-            padding: 16px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+th {
+    background: #414b57;
+    color: #f1f3f5;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #56606c;
+}
 
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #eee;
-        }
+td {
+    background: #39424e;
+    color: #f1f3f5;
+    padding: 16px;
+    border-bottom: 1px solid #4b5563;
+}
 
         .empty {
             padding: 40px;
