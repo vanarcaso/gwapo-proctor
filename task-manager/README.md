@@ -1,58 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Personal Task Manager
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple Laravel school project for creating and managing personal tasks. This practice repository is named **gwapo-proctor**; the application itself is Personal Task Manager. Laravel lives directly in the repository root.
 
-## About Laravel
+| Item | Value |
+| --- | --- |
+| Project Code | WST21-PM-2026-SF |
+| Student Name | [LEAVE PLACEHOLDER FOR ME TO FILL IN] |
+| Course & Year | [LEAVE PLACEHOLDER FOR ME TO FILL IN] |
+| Database Used | SQLite |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Add Task
+- View Tasks
+- Edit Task
+- Delete Task
+- Update Status between Pending and Completed
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Task names and due dates are required. Descriptions are optional. Names are limited to 255 characters, descriptions to 5,000 characters, and status must be Pending or Completed. Past due dates are allowed. Laravel validates all changes on the server; forms use CSRF protection and Blade escapes displayed task text.
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.5 recommended (the committed dependency lock requires PHP 8.4.1 or newer).
+- Composer 2.
+- PHP extensions: PDO, pdo_sqlite, sqlite3, mbstring, fileinfo, openssl, tokenizer, ctype, XML/DOM, session, filter and iconv. Enable curl and zip for dependency installation.
+- Git for version control.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+No MySQL, XAMPP, Node.js or npm build is needed for these pages. The original Laravel frontend scaffold remains available, but the task pages use `public/css/tasks.css` directly.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## First-time setup and run
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Open a terminal in the repository root, where `artisan` and `composer.json` are located:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer run setup
+php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+The setup command installs the locked dependencies, copies `.env.example` to `.env` when needed, creates `database/database.sqlite` when needed, generates a missing application key and runs migrations. It preserves an existing key and database. Subsequent starts need only the `php artisan serve` command.
 
-## Contributing
+Local URL: **http://localhost:8000**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+In **GitHub Codespaces**, open the **Ports** panel, find port **8000**, then click **Open in Browser**. The URL normally looks like:
 
-## Code of Conduct
+```text
+https://YOUR-CODESPACE-NAME-8000.app.github.dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Use the actual forwarded URL from the Ports panel. Keep the port private: this assignment intentionally has no login or multi-user accounts. If PHP or Composer is missing or too old, use a PHP 8.5 development environment before setup.
 
-## Security Vulnerabilities
+## Database setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The example environment sets `DB_CONNECTION=sqlite`. `DB_DATABASE` is intentionally unset so Laravel uses the portable default `database/database.sqlite` rather than a machine-specific absolute path. Sessions and cache use local files.
 
-## License
+If dependencies are already installed, initialize the environment and database with:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php scripts/setup.php
+php artisan migrate:status
+```
+
+The `tasks` migration creates `id`, `task_name`, `description`, `status`, `due_date`, and Laravel's `created_at` / `updated_at` timestamps. The starter migrations for users, cache and jobs are retained; this task manager does not require registration, queues or MySQL.
+
+The database and `.env` are ignored by Git. A new clone creates its own empty SQLite file during setup. Do not commit `.env`, application keys, dependency folders, or your personal task data.
+
+## Important routes
+
+| Method | URL | Controller method | Purpose |
+| --- | --- | --- | --- |
+| GET | `/` or `/tasks` | `index` | View all saved tasks |
+| GET | `/tasks/create` | `create` | Display Add Task form |
+| POST | `/tasks` | `store` | Validate and save a new task |
+| GET | `/tasks/{task}/edit` | `edit` | Display Edit Task form |
+| PUT/PATCH | `/tasks/{task}` | `update` | Validate and save changes |
+| DELETE | `/tasks/{task}` | `destroy` | Delete the selected task |
+| PATCH | `/tasks/{task}/status` | `updateStatus` | Change Pending / Completed |
+
+HTML forms send POST with Laravel's `@method('PUT')`, `@method('PATCH')` or `@method('DELETE')` when needed. Each modifying form contains `@csrf`. Route model binding finds the task by ID and returns 404 if it is missing.
+
+## Laravel MVC flow
+
+**Route → Controller → Model → Database → Blade**
+
+1. **Route:** `routes/web.php` receives the browser request and sends it to the appropriate controller method.
+2. **Controller:** `app/Http/Controllers/TaskController.php` handles application logic, validates input and communicates with the model.
+3. **Model:** `app/Models/Task.php` represents Task data and communicates with the database using Eloquent. Its fillable list controls which fields may be assigned together, and its date cast makes due dates easy to format.
+4. **Database:** SQLite stores the tasks in `database/database.sqlite`. The migration defines the table structure.
+5. **Blade:** `resources/views/tasks/` displays task data and forms to the user. The controller supplies the data to these views.
+
+For example, Add Task submits POST `/tasks`. The route calls `store`, the controller validates input, and `Task::create()` inserts a database row. The response redirects to `/tasks`; `index` loads the records and passes them to the list Blade view. Editing and deleting follow the same pattern and display a success message after redirecting.
+
+## Tests and useful checks
+
+```bash
+php artisan test
+php artisan route:list --except-vendor
+php artisan migrate:status
+composer validate
+```
+
+Feature tests use an isolated in-memory SQLite database, so they do not erase your saved tasks. Coverage includes the empty state, forms, create/list/edit/delete, both status changes, invalid and missing inputs, maximum lengths, missing records, escaped output and HTTP methods. The running app was also checked with actual browser forms. See `docs/DEMONSTRATION.md` for study notes and the verification report.
+
+## Files to study first
+
+1. `routes/web.php`
+2. `app/Http/Controllers/TaskController.php`
+3. `app/Models/Task.php`
+4. `database/migrations/2026_09_25_000000_create_tasks_table.php`
+5. `resources/views/tasks/index.blade.php`, `create.blade.php`, `edit.blade.php`, `_form.blade.php`
+6. `tests/Feature/TaskManagerTest.php`
+
+The original repository README is preserved in `docs/ORIGINAL-README.md`, and the original Laravel README is preserved in `docs/LARAVEL-README.md`.
+
+## Commit when ready
+
+After reviewing the changes and filling in your student information:
+
+```bash
+git status
+git add -A
+git diff --cached --stat
+git commit -m "Build Personal Task Manager with SQLite"
+git push
+```
+
+The relocation may appear as deletions under `task-manager/` plus new root files until staged; Git can detect the renames. Keep `.git` intact.
