@@ -1,0 +1,1813 @@
+diff --git a/task-manager/.editorconfig b/.editorconfig
+similarity index 100%
+rename from task-manager/.editorconfig
+rename to .editorconfig
+diff --git a/.env.example b/.env.example
+new file mode 100644
+index 0000000000000000000000000000000000000000..91bfbe6c097351e98c89dbd2c59401e662e13ed9
+--- /dev/null
++++ b/.env.example
+@@ -0,0 +1,32 @@
++APP_NAME="Personal Task Manager"
++APP_ENV=local
++APP_KEY=
++APP_DEBUG=true
++APP_URL=http://localhost:8000
++
++APP_LOCALE=en
++APP_FALLBACK_LOCALE=en
++APP_FAKER_LOCALE=en_US
++APP_MAINTENANCE_DRIVER=file
++BCRYPT_ROUNDS=12
++
++LOG_CHANNEL=stack
++LOG_STACK=single
++LOG_LEVEL=debug
++
++DB_CONNECTION=sqlite
++# Leave DB_DATABASE unset to use database/database.sqlite on every machine.
++
++SESSION_DRIVER=file
++SESSION_LIFETIME=120
++SESSION_ENCRYPT=false
++SESSION_PATH=/
++SESSION_DOMAIN=null
++
++CACHE_STORE=file
++QUEUE_CONNECTION=sync
++BROADCAST_CONNECTION=log
++FILESYSTEM_DISK=local
++MAIL_MAILER=log
++MAIL_FROM_ADDRESS="hello@example.com"
++MAIL_FROM_NAME="Personal Task Manager"
+diff --git a/task-manager/.gitattributes b/.gitattributes
+similarity index 100%
+rename from task-manager/.gitattributes
+rename to .gitattributes
+diff --git a/task-manager/.gitignore b/.gitignore
+similarity index 100%
+rename from task-manager/.gitignore
+rename to .gitignore
+diff --git a/task-manager/.npmrc b/.npmrc
+similarity index 100%
+rename from task-manager/.npmrc
+rename to .npmrc
+diff --git a/AGENTS.md b/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..183769316e1df2031fac8584209df48ed2ee161d
+--- /dev/null
++++ b/AGENTS.md
+@@ -0,0 +1,132 @@
++<laravel-boost-guidelines>
++=== foundation rules ===
++
++# Laravel Boost Guidelines
++
++The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
++
++## Foundational Context
++
++This application is a Laravel application running on PHP 8.5. You are an expert with the Laravel ecosystem. Always use the APIs that match the installed major version of each package — do not assume a version.
++
++Before relying on a package's API, confirm its installed version:
++- PHP packages: run `composer show --direct` to list direct dependencies with versions, or `composer show <vendor/package>` for a single package.
++- JS packages: check `package.json` for the installed versions.
++
++## Conventions
++
++- You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
++- Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
++- Check for existing components to reuse before writing a new one.
++
++## Verification Scripts
++
++- Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
++
++## Application Structure & Architecture
++
++- Stick to existing directory structure; don't create new base folders without approval.
++- Do not change the application's dependencies without approval.
++
++## Frontend Bundling
++
++- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
++
++## Documentation Files
++
++- You must only create documentation files if explicitly requested by the user.
++
++## Replies
++
++- Be concise in your explanations - focus on what's important rather than explaining obvious details.
++
++=== boost rules ===
++
++# Laravel Boost
++
++## Project Rules
++
++- This project contains committed, area-grouped rules in `.ai/rules` when that directory exists (settled decisions, non-obvious traps, standing constraints). Framework and package guidelines that only apply to specific paths (testing, frontend, components) also live there, under `.ai/rules/boost` — this is not just recorded decisions, it is load-bearing guidance you have not seen inline. Before you enter plan mode or create/edit any file, you MUST first: open @.ai/rules/index.md (it maps file globs to rule files), read every rule file whose globs cover the path(s) in scope, and run `grep -rin 'keyword' .ai/rules` to catch what a path match alone misses. Do not write code until you have read and are following every matching rule. If `.ai/rules` does not exist, continue without it.
++
++## Artisan
++
++- Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
++- Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
++- Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
++
++## Tinker
++
++- Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
++- Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
++  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
++
++=== php rules ===
++
++# PHP
++
++- Always use curly braces for control structures, even for single-line bodies.
++- Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
++- Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
++- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
++- Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
++- Use array shape type definitions in PHPDoc blocks.
++
++=== deployments rules ===
++
++# Deployment
++
++- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
++- Activate the `deploying-to-cloud` skill whenever deploying to Laravel Cloud, configuring Cloud environments or resources, using the Cloud CLI, or troubleshooting Cloud deployments.
++
++=== laravel/core rules ===
++
++# Do Things the Laravel Way
++
++- Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using `php artisan list` and check their parameters with `php artisan [command] --help`.
++- If you're creating a generic PHP class, use `php artisan make:class`.
++- Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
++
++### Model Creation
++
++- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
++
++## APIs & Eloquent Resources
++
++- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
++
++## URL Generation
++
++- When generating links to other pages, prefer named routes and the `route()` function.
++
++## Testing
++
++- When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
++- Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
++- When creating tests, make use of `php artisan make:test [options] {name}` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
++
++## Vite Error
++
++- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
++
++=== pint/core rules ===
++
++# Laravel Pint Code Formatter
++
++- If you have modified any PHP files, you must run `vendor/bin/pint --dirty --format agent` before finalizing changes to ensure your code matches the project's expected style.
++- Do not run `vendor/bin/pint --test --format agent`, simply run `vendor/bin/pint --format agent` to fix any formatting issues.
++
++=== phpunit/core rules ===
++
++# PHPUnit
++
++- This project uses PHPUnit. Create tests with `php artisan make:test --phpunit {name}`.
++- Do not include the test suite directory in `{name}`. Use `SomeFeatureTest`, not `Feature/SomeFeatureTest`.
++- Read the `testing-best-practices` skill for guidance on coverage, naming, structure, dependency isolation, and review.
++
++## Running Tests
++
++- Run the narrowest set of tests that covers the change. Pass a file path or `--filter=testName` to `php artisan test --compact`.
++- Rerun a test after each change to it.
++- Run `vendor/bin/phpunit` to call the test runner directly. It accepts the same file path and `--filter=testName` arguments.
++
++</laravel-boost-guidelines>
+diff --git a/task-manager/CLAUDE.md b/CLAUDE.md
+similarity index 100%
+rename from task-manager/CLAUDE.md
+rename to CLAUDE.md
+diff --git a/README.md b/README.md
+index 3587d67b4d8d38bb1f8a7fdc2c7524b76155e876..043776fd7e5e202b06d7ab1ecfa67eb8d8b168e0 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,127 @@
+-# gwapo-proctor
+\ No newline at end of file
++# Personal Task Manager
++
++A simple Laravel school project for creating and managing personal tasks. This practice repository is named **gwapo-proctor**; the application itself is Personal Task Manager. Laravel lives directly in the repository root.
++
++| Item | Value |
++| --- | --- |
++| Project Code | WST21-PM-2026-SF |
++| Student Name | [LEAVE PLACEHOLDER FOR ME TO FILL IN] |
++| Course & Year | [LEAVE PLACEHOLDER FOR ME TO FILL IN] |
++| Database Used | SQLite |
++
++## Features
++
++- Add Task
++- View Tasks
++- Edit Task
++- Delete Task
++- Update Status between Pending and Completed
++
++Task names and due dates are required. Descriptions are optional. Names are limited to 255 characters, descriptions to 5,000 characters, and status must be Pending or Completed. Past due dates are allowed. Laravel validates all changes on the server; forms use CSRF protection and Blade escapes displayed task text.
++
++## Requirements
++
++- PHP 8.5 recommended (the committed dependency lock requires PHP 8.4.1 or newer).
++- Composer 2.
++- PHP extensions: PDO, pdo_sqlite, sqlite3, mbstring, fileinfo, openssl, tokenizer, ctype, XML/DOM, session, filter and iconv. Enable curl and zip for dependency installation.
++- Git for version control.
++
++No MySQL, XAMPP, Node.js or npm build is needed for these pages. The original Laravel frontend scaffold remains available, but the task pages use `public/css/tasks.css` directly.
++
++## First-time setup and run
++
++Open a terminal in the repository root, where `artisan` and `composer.json` are located:
++
++```bash
++composer run setup
++php artisan serve --host=0.0.0.0 --port=8000
++```
++
++The setup command installs the locked dependencies, copies `.env.example` to `.env` when needed, creates `database/database.sqlite` when needed, generates a missing application key and runs migrations. It preserves an existing key and database. Subsequent starts need only the `php artisan serve` command.
++
++Local URL: **http://localhost:8000**
++
++In **GitHub Codespaces**, open the **Ports** panel, find port **8000**, then click **Open in Browser**. The URL normally looks like:
++
++```text
++https://YOUR-CODESPACE-NAME-8000.app.github.dev
++```
++
++Use the actual forwarded URL from the Ports panel. Keep the port private: this assignment intentionally has no login or multi-user accounts. If PHP or Composer is missing or too old, use a PHP 8.5 development environment before setup.
++
++## Database setup
++
++The example environment sets `DB_CONNECTION=sqlite`. `DB_DATABASE` is intentionally unset so Laravel uses the portable default `database/database.sqlite` rather than a machine-specific absolute path. Sessions and cache use local files.
++
++If dependencies are already installed, initialize the environment and database with:
++
++```bash
++php scripts/setup.php
++php artisan migrate:status
++```
++
++The `tasks` migration creates `id`, `task_name`, `description`, `status`, `due_date`, and Laravel's `created_at` / `updated_at` timestamps. The starter migrations for users, cache and jobs are retained; this task manager does not require registration, queues or MySQL.
++
++The database and `.env` are ignored by Git. A new clone creates its own empty SQLite file during setup. Do not commit `.env`, application keys, dependency folders, or your personal task data.
++
++## Important routes
++
++| Method | URL | Controller method | Purpose |
++| --- | --- | --- | --- |
++| GET | `/` or `/tasks` | `index` | View all saved tasks |
++| GET | `/tasks/create` | `create` | Display Add Task form |
++| POST | `/tasks` | `store` | Validate and save a new task |
++| GET | `/tasks/{task}/edit` | `edit` | Display Edit Task form |
++| PUT/PATCH | `/tasks/{task}` | `update` | Validate and save changes |
++| DELETE | `/tasks/{task}` | `destroy` | Delete the selected task |
++| PATCH | `/tasks/{task}/status` | `updateStatus` | Change Pending / Completed |
++
++HTML forms send POST with Laravel's `@method('PUT')`, `@method('PATCH')` or `@method('DELETE')` when needed. Each modifying form contains `@csrf`. Route model binding finds the task by ID and returns 404 if it is missing.
++
++## Laravel MVC flow
++
++**Route → Controller → Model → Database → Blade**
++
++1. **Route:** `routes/web.php` receives the browser request and sends it to the appropriate controller method.
++2. **Controller:** `app/Http/Controllers/TaskController.php` handles application logic, validates input and communicates with the model.
++3. **Model:** `app/Models/Task.php` represents Task data and communicates with the database using Eloquent. Its fillable list controls which fields may be assigned together, and its date cast makes due dates easy to format.
++4. **Database:** SQLite stores the tasks in `database/database.sqlite`. The migration defines the table structure.
++5. **Blade:** `resources/views/tasks/` displays task data and forms to the user. The controller supplies the data to these views.
++
++For example, Add Task submits POST `/tasks`. The route calls `store`, the controller validates input, and `Task::create()` inserts a database row. The response redirects to `/tasks`; `index` loads the records and passes them to the list Blade view. Editing and deleting follow the same pattern and display a success message after redirecting.
++
++## Tests and useful checks
++
++```bash
++php artisan test
++php artisan route:list --except-vendor
++php artisan migrate:status
++composer validate
++```
++
++Feature tests use an isolated in-memory SQLite database, so they do not erase your saved tasks. Coverage includes the empty state, forms, create/list/edit/delete, both status changes, invalid and missing inputs, maximum lengths, missing records, escaped output and HTTP methods. The running app was also checked with actual browser forms. See `docs/DEMONSTRATION.md` for study notes and the verification report.
++
++## Files to study first
++
++1. `routes/web.php`
++2. `app/Http/Controllers/TaskController.php`
++3. `app/Models/Task.php`
++4. `database/migrations/2026_09_25_000000_create_tasks_table.php`
++5. `resources/views/tasks/index.blade.php`, `create.blade.php`, `edit.blade.php`, `_form.blade.php`
++6. `tests/Feature/TaskManagerTest.php`
++
++The original repository README is preserved in `docs/ORIGINAL-README.md`, and the original Laravel README is preserved in `docs/LARAVEL-README.md`.
++
++## Commit when ready
++
++After reviewing the changes and filling in your student information:
++
++```bash
++git status
++git add -A
++git diff --cached --stat
++git commit -m "Build Personal Task Manager with SQLite"
++git push
++```
++
++The relocation may appear as deletions under `task-manager/` plus new root files until staged; Git can detect the renames. Keep `.git` intact.
+diff --git a/task-manager/app/Http/Controllers/Controller.php b/app/Http/Controllers/Controller.php
+similarity index 100%
+rename from task-manager/app/Http/Controllers/Controller.php
+rename to app/Http/Controllers/Controller.php
+diff --git a/app/Http/Controllers/TaskController.php b/app/Http/Controllers/TaskController.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..511cf7d15cc56e4452fc8c318b377d33bc4b09ae
+--- /dev/null
++++ b/app/Http/Controllers/TaskController.php
+@@ -0,0 +1,68 @@
++<?php
++
++namespace App\Http\Controllers;
++
++use App\Models\Task;
++use Illuminate\Http\RedirectResponse;
++use Illuminate\Http\Request;
++use Illuminate\Validation\Rule;
++use Illuminate\View\View;
++
++class TaskController extends Controller
++{
++    public function index(): View
++    {
++        return view('tasks.index', ['tasks' => Task::orderByDesc('id')->get()]);
++    }
++
++    public function create(): View
++    {
++        return view('tasks.create', ['task' => new Task(['status' => 'Pending'])]);
++    }
++
++    public function store(Request $request): RedirectResponse
++    {
++        Task::create($this->validatedTask($request));
++
++        return to_route('tasks.index')->with('success', 'Task added successfully.');
++    }
++
++    public function edit(Task $task): View
++    {
++        return view('tasks.edit', ['task' => $task]);
++    }
++
++    public function update(Request $request, Task $task): RedirectResponse
++    {
++        $task->update($this->validatedTask($request));
++
++        return to_route('tasks.index')->with('success', 'Task updated successfully.');
++    }
++
++    public function destroy(Task $task): RedirectResponse
++    {
++        $task->delete();
++
++        return to_route('tasks.index')->with('success', 'Task deleted successfully.');
++    }
++
++    public function updateStatus(Request $request, Task $task): RedirectResponse
++    {
++        $validated = $request->validate([
++            'status' => ['required', Rule::in(Task::STATUSES)],
++        ]);
++        $task->update($validated);
++
++        return to_route('tasks.index')->with('success', 'Task status updated successfully.');
++    }
++
++    private function validatedTask(Request $request): array
++    {
++        return $request->validate([
++            'task_name' => ['required', 'string', 'max:255'],
++            'description' => ['nullable', 'string', 'max:5000'],
++            'status' => ['required', Rule::in(Task::STATUSES)],
++            'due_date' => ['required', 'date_format:Y-m-d'],
++        ]);
++    }
++}
+diff --git a/app/Models/Task.php b/app/Models/Task.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..8ee68f573b5a8de14d527054cc68df599b7b926e
+--- /dev/null
++++ b/app/Models/Task.php
+@@ -0,0 +1,20 @@
++<?php
++
++namespace App\Models;
++
++use Illuminate\Database\Eloquent\Attributes\Fillable;
++use Illuminate\Database\Eloquent\Factories\HasFactory;
++use Illuminate\Database\Eloquent\Model;
++
++#[Fillable(['task_name', 'description', 'status', 'due_date'])]
++class Task extends Model
++{
++    use HasFactory;
++
++    public const STATUSES = ['Pending', 'Completed'];
++
++    protected function casts(): array
++    {
++        return ['due_date' => 'date'];
++    }
++}
+diff --git a/task-manager/app/Models/User.php b/app/Models/User.php
+similarity index 100%
+rename from task-manager/app/Models/User.php
+rename to app/Models/User.php
+diff --git a/task-manager/app/Providers/AppServiceProvider.php b/app/Providers/AppServiceProvider.php
+similarity index 100%
+rename from task-manager/app/Providers/AppServiceProvider.php
+rename to app/Providers/AppServiceProvider.php
+diff --git a/task-manager/artisan b/artisan
+old mode 100755
+new mode 100644
+similarity index 100%
+rename from task-manager/artisan
+rename to artisan
+diff --git a/boost.json b/boost.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..20254136e9f522872ad75c7c89fbb54c56f56eae
+--- /dev/null
++++ b/boost.json
+@@ -0,0 +1,3 @@
++{
++    "guidelines": true
++}
+diff --git a/task-manager/bootstrap/app.php b/bootstrap/app.php
+similarity index 100%
+rename from task-manager/bootstrap/app.php
+rename to bootstrap/app.php
+diff --git a/task-manager/bootstrap/cache/.gitignore b/bootstrap/cache/.gitignore
+similarity index 100%
+rename from task-manager/bootstrap/cache/.gitignore
+rename to bootstrap/cache/.gitignore
+diff --git a/task-manager/bootstrap/providers.php b/bootstrap/providers.php
+similarity index 100%
+rename from task-manager/bootstrap/providers.php
+rename to bootstrap/providers.php
+diff --git a/task-manager/composer.json b/composer.json
+similarity index 87%
+rename from task-manager/composer.json
+rename to composer.json
+index 9b8fbd5d4dcf8535e1342196f5619187bf17bbed..ab810d1efdce0d51a49b6a1ebd0bd47a7866ad42 100644
+--- a/task-manager/composer.json
++++ b/composer.json
+@@ -3,7 +3,10 @@
+     "name": "laravel/laravel",
+     "type": "project",
+     "description": "The skeleton application for the Laravel framework.",
+-    "keywords": ["laravel", "framework"],
++    "keywords": [
++        "laravel",
++        "framework"
++    ],
+     "license": "MIT",
+     "require": {
+         "php": "^8.3",
+@@ -12,6 +15,7 @@
+     },
+     "require-dev": {
+         "fakerphp/faker": "^1.23",
++        "laravel/boost": "^2.10",
+         "laravel/pail": "^1.2.5",
+         "laravel/pao": "^1.0.6",
+         "laravel/pint": "^1.27",
+@@ -33,16 +37,12 @@
+     },
+     "scripts": {
+         "setup": [
+-            "composer install",
+-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+-            "@php artisan key:generate",
+-            "@php artisan migrate --force",
+-            "npm install --ignore-scripts",
+-            "npm run build"
++            "@composer install",
++            "@php scripts/setup.php"
+         ],
+         "dev": [
+             "Composer\\Config::disableProcessTimeout",
+-            "@php artisan dev"
++            "@php artisan serve --host=0.0.0.0 --port=8000"
+         ],
+         "test": [
+             "@php artisan config:clear --ansi @no_additional_args",
+diff --git a/task-manager/composer.lock b/composer.lock
+similarity index 95%
+rename from task-manager/composer.lock
+rename to composer.lock
+index 091f1914db61d5e3869cc3ddb8e0e0dd04f874b3..c8fd3aea07026af41819d779ea3714e3ff98d81a 100644
+--- a/task-manager/composer.lock
++++ b/composer.lock
+@@ -4,7 +4,7 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+         "This file is @generated automatically"
+     ],
+-    "content-hash": "cda2add6397422fb1a2eb5b9207f1575",
++    "content-hash": "b95aef2242bb3dce2389c238b7ec69bf",
+     "packages": [
+         {
+             "name": "brick/math",
+@@ -6044,6 +6044,83 @@
+         }
+     ],
+     "packages-dev": [
++        {
++            "name": "composer/semver",
++            "version": "3.5.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/composer/semver.git",
++                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/composer/semver/zipball/f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
++                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
++                "shasum": ""
++            },
++            "require": {
++                "php": "^5.3.2 || ^7.0 || ^8.0"
++            },
++            "require-dev": {
++                "phpstan/phpstan": "^1.11",
++                "symfony/phpunit-bridge": "^3 || ^7"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-main": "3.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Composer\\Semver\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Nils Adermann",
++                    "email": "naderman@naderman.de",
++                    "homepage": "http://www.naderman.de"
++                },
++                {
++                    "name": "Jordi Boggiano",
++                    "email": "j.boggiano@seld.be",
++                    "homepage": "http://seld.be"
++                },
++                {
++                    "name": "Rob Bast",
++                    "email": "rob.bast@gmail.com",
++                    "homepage": "http://robbast.nl"
++                }
++            ],
++            "description": "Version comparison library that offers utilities, version constraint parsing and validation.",
++            "keywords": [
++                "semantic",
++                "semver",
++                "validation",
++                "versioning"
++            ],
++            "support": {
++                "irc": "ircs://irc.libera.chat:6697/composer",
++                "issues": "https://github.com/composer/semver/issues",
++                "source": "https://github.com/composer/semver/tree/3.5.0"
++            },
++            "funding": [
++                {
++                    "url": "https://packagist.com",
++                    "type": "custom"
++                },
++                {
++                    "url": "https://github.com/composer",
++                    "type": "github"
++                }
++            ],
++            "time": "2026-09-24T14:38:51+00:00"
++        },
+         {
+             "name": "fakerphp/faker",
+             "version": "v1.24.1",
+@@ -6295,6 +6372,146 @@
+             },
+             "time": "2026-04-29T18:32:34+00:00"
+         },
++        {
++            "name": "laravel/boost",
++            "version": "v2.10.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/laravel/boost.git",
++                "reference": "76c236d4eb7d51698f882d149bc367c1ebc0d078"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/laravel/boost/zipball/76c236d4eb7d51698f882d149bc367c1ebc0d078",
++                "reference": "76c236d4eb7d51698f882d149bc367c1ebc0d078",
++                "shasum": ""
++            },
++            "require": {
++                "guzzlehttp/guzzle": "^7.9|^8.0",
++                "illuminate/console": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/contracts": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/routing": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/support": "^11.45.3|^12.41.1|^13.0",
++                "laravel/mcp": "^0.7.1|^0.8.0|^0.9.0|^1.0",
++                "laravel/prompts": "^0.3.10",
++                "laravel/roster": "^1.0.0",
++                "php": "^8.2"
++            },
++            "require-dev": {
++                "laravel/pint": "^1.27.0",
++                "mockery/mockery": "^1.6.12",
++                "orchestra/testbench": "^9.15.0|^10.6|^11.0",
++                "pestphp/pest": "^2.36.0|^3.8.4|^4.1.5",
++                "phpstan/phpstan": "^2.1.27",
++                "rector/rector": "^2.1"
++            },
++            "type": "library",
++            "extra": {
++                "laravel": {
++                    "providers": [
++                        "Laravel\\Boost\\BoostServiceProvider"
++                    ]
++                },
++                "branch-alias": {
++                    "dev-master": "1.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Laravel\\Boost\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Laravel Boost accelerates AI-assisted development by providing the essential context and structure that AI needs to generate high-quality, Laravel-specific code.",
++            "homepage": "https://github.com/laravel/boost",
++            "keywords": [
++                "ai",
++                "dev",
++                "laravel"
++            ],
++            "support": {
++                "issues": "https://github.com/laravel/boost/issues",
++                "source": "https://github.com/laravel/boost"
++            },
++            "time": "2026-09-23T09:33:31+00:00"
++        },
++        {
++            "name": "laravel/mcp",
++            "version": "v1.0.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/laravel/mcp.git",
++                "reference": "92987a9d03847801299ff4abe909ba7686147dde"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/laravel/mcp/zipball/92987a9d03847801299ff4abe909ba7686147dde",
++                "reference": "92987a9d03847801299ff4abe909ba7686147dde",
++                "shasum": ""
++            },
++            "require": {
++                "ext-json": "*",
++                "ext-mbstring": "*",
++                "illuminate/console": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/container": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/contracts": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/http": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/json-schema": "^12.41.1|^13.0",
++                "illuminate/routing": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/support": "^11.45.3|^12.41.1|^13.0",
++                "illuminate/validation": "^11.45.3|^12.41.1|^13.0",
++                "php": "^8.2",
++                "symfony/process": "^7.4.5|^8.0.5"
++            },
++            "require-dev": {
++                "laravel/pint": "^1.20",
++                "orchestra/testbench": "^9.15|^10.8|^11.0",
++                "pestphp/pest": "^3.8.5|^4.3.2",
++                "phpstan/phpstan": "^2.1.27",
++                "rector/rector": "^2.2.4"
++            },
++            "type": "library",
++            "extra": {
++                "laravel": {
++                    "aliases": {
++                        "Mcp": "Laravel\\Mcp\\Facades\\Mcp"
++                    },
++                    "providers": [
++                        "Laravel\\Mcp\\Server\\McpServiceProvider"
++                    ]
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Laravel\\Mcp\\": "src/",
++                    "Laravel\\Mcp\\Server\\": "src/Server/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Taylor Otwell",
++                    "email": "taylor@laravel.com"
++                }
++            ],
++            "description": "Rapidly build MCP servers for your Laravel applications.",
++            "homepage": "https://github.com/laravel/mcp",
++            "keywords": [
++                "laravel",
++                "mcp"
++            ],
++            "support": {
++                "issues": "https://github.com/laravel/mcp/issues",
++                "source": "https://github.com/laravel/mcp"
++            },
++            "time": "2026-09-24T10:45:09+00:00"
++        },
+         {
+             "name": "laravel/pail",
+             "version": "v1.2.7",
+@@ -6530,6 +6747,68 @@
+             },
+             "time": "2026-09-10T10:47:55+00:00"
+         },
++        {
++            "name": "laravel/roster",
++            "version": "v1.0.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/laravel/roster.git",
++                "reference": "89e518bd88ae98ff50f6082f6b517c8d8e8245fa"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/laravel/roster/zipball/89e518bd88ae98ff50f6082f6b517c8d8e8245fa",
++                "reference": "89e518bd88ae98ff50f6082f6b517c8d8e8245fa",
++                "shasum": ""
++            },
++            "require": {
++                "composer/semver": "^3.0",
++                "illuminate/console": "^11.0|^12.0|^13.0",
++                "illuminate/contracts": "^11.0|^12.0|^13.0",
++                "illuminate/support": "^11.0|^12.0|^13.0",
++                "php": "^8.2",
++                "symfony/yaml": "^7.2|^8.0"
++            },
++            "require-dev": {
++                "laravel/pint": "^1.29",
++                "mockery/mockery": "^1.6",
++                "orchestra/testbench": "^9.0|^10.0|^11.0",
++                "pestphp/pest": "^3.0|^4.1",
++                "phpstan/phpstan": "^2.0",
++                "rector/rector": "^2.0"
++            },
++            "type": "library",
++            "extra": {
++                "laravel": {
++                    "providers": [
++                        "Laravel\\Roster\\RosterServiceProvider"
++                    ]
++                },
++                "branch-alias": {
++                    "dev-master": "1.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Laravel\\Roster\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Detect packages & approaches in use within a Laravel project",
++            "homepage": "https://github.com/laravel/roster",
++            "keywords": [
++                "dev",
++                "laravel"
++            ],
++            "support": {
++                "issues": "https://github.com/laravel/roster/issues",
++                "source": "https://github.com/laravel/roster"
++            },
++            "time": "2026-07-18T17:53:15+00:00"
++        },
+         {
+             "name": "mockery/mockery",
+             "version": "1.6.15",
+@@ -8294,6 +8573,82 @@
+             ],
+             "time": "2024-10-20T05:08:20+00:00"
+         },
++        {
++            "name": "symfony/yaml",
++            "version": "v8.1.6",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/symfony/yaml.git",
++                "reference": "0b4aa53a67f9fece88c665f1a1dadcfd25d93fe5"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/0b4aa53a67f9fece88c665f1a1dadcfd25d93fe5",
++                "reference": "0b4aa53a67f9fece88c665f1a1dadcfd25d93fe5",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=8.4.1",
++                "symfony/polyfill-ctype": "^1.8"
++            },
++            "conflict": {
++                "symfony/console": "<7.4"
++            },
++            "require-dev": {
++                "symfony/console": "^7.4|^8.0",
++                "yaml/yaml-test-suite": "*"
++            },
++            "bin": [
++                "Resources/bin/yaml-lint"
++            ],
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "Symfony\\Component\\Yaml\\": ""
++                },
++                "exclude-from-classmap": [
++                    "/Tests/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
++                },
++                {
++                    "name": "Symfony Community",
++                    "homepage": "https://symfony.com/contributors"
++                }
++            ],
++            "description": "Loads and dumps YAML files",
++            "homepage": "https://symfony.com",
++            "support": {
++                "source": "https://github.com/symfony/yaml/tree/v8.1.6"
++            },
++            "funding": [
++                {
++                    "url": "https://symfony.com/sponsor",
++                    "type": "custom"
++                },
++                {
++                    "url": "https://github.com/fabpot",
++                    "type": "github"
++                },
++                {
++                    "url": "https://github.com/nicolas-grekas",
++                    "type": "github"
++                },
++                {
++                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
++                    "type": "tidelift"
++                }
++            ],
++            "time": "2026-08-30T01:03:44+00:00"
++        },
+         {
+             "name": "theseer/tokenizer",
+             "version": "2.0.1",
+diff --git a/task-manager/config/app.php b/config/app.php
+similarity index 100%
+rename from task-manager/config/app.php
+rename to config/app.php
+diff --git a/task-manager/config/auth.php b/config/auth.php
+similarity index 100%
+rename from task-manager/config/auth.php
+rename to config/auth.php
+diff --git a/task-manager/config/cache.php b/config/cache.php
+similarity index 100%
+rename from task-manager/config/cache.php
+rename to config/cache.php
+diff --git a/task-manager/config/database.php b/config/database.php
+similarity index 100%
+rename from task-manager/config/database.php
+rename to config/database.php
+diff --git a/task-manager/config/filesystems.php b/config/filesystems.php
+similarity index 100%
+rename from task-manager/config/filesystems.php
+rename to config/filesystems.php
+diff --git a/task-manager/config/logging.php b/config/logging.php
+similarity index 100%
+rename from task-manager/config/logging.php
+rename to config/logging.php
+diff --git a/task-manager/config/mail.php b/config/mail.php
+similarity index 100%
+rename from task-manager/config/mail.php
+rename to config/mail.php
+diff --git a/task-manager/config/queue.php b/config/queue.php
+similarity index 100%
+rename from task-manager/config/queue.php
+rename to config/queue.php
+diff --git a/task-manager/config/services.php b/config/services.php
+similarity index 100%
+rename from task-manager/config/services.php
+rename to config/services.php
+diff --git a/task-manager/config/session.php b/config/session.php
+similarity index 100%
+rename from task-manager/config/session.php
+rename to config/session.php
+diff --git a/task-manager/database/.gitignore b/database/.gitignore
+similarity index 100%
+rename from task-manager/database/.gitignore
+rename to database/.gitignore
+diff --git a/database/factories/TaskFactory.php b/database/factories/TaskFactory.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..bc2857dd690e1c8d5b09a232306d4430bb76fe66
+--- /dev/null
++++ b/database/factories/TaskFactory.php
+@@ -0,0 +1,20 @@
++<?php
++
++namespace Database\Factories;
++
++use App\Models\Task;
++use Illuminate\Database\Eloquent\Factories\Factory;
++
++/** @extends Factory<Task> */
++class TaskFactory extends Factory
++{
++    public function definition(): array
++    {
++        return [
++            'task_name' => fake()->sentence(4),
++            'description' => fake()->paragraph(),
++            'status' => 'Pending',
++            'due_date' => '2026-10-01',
++        ];
++    }
++}
+diff --git a/task-manager/database/factories/UserFactory.php b/database/factories/UserFactory.php
+similarity index 100%
+rename from task-manager/database/factories/UserFactory.php
+rename to database/factories/UserFactory.php
+diff --git a/task-manager/database/migrations/0001_01_01_000000_create_users_table.php b/database/migrations/0001_01_01_000000_create_users_table.php
+similarity index 100%
+rename from task-manager/database/migrations/0001_01_01_000000_create_users_table.php
+rename to database/migrations/0001_01_01_000000_create_users_table.php
+diff --git a/task-manager/database/migrations/0001_01_01_000001_create_cache_table.php b/database/migrations/0001_01_01_000001_create_cache_table.php
+similarity index 100%
+rename from task-manager/database/migrations/0001_01_01_000001_create_cache_table.php
+rename to database/migrations/0001_01_01_000001_create_cache_table.php
+diff --git a/task-manager/database/migrations/0001_01_01_000002_create_jobs_table.php b/database/migrations/0001_01_01_000002_create_jobs_table.php
+similarity index 100%
+rename from task-manager/database/migrations/0001_01_01_000002_create_jobs_table.php
+rename to database/migrations/0001_01_01_000002_create_jobs_table.php
+diff --git a/database/migrations/2026_09_25_000000_create_tasks_table.php b/database/migrations/2026_09_25_000000_create_tasks_table.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..2697eb61c7341c10192a7204219772d06d0c3607
+--- /dev/null
++++ b/database/migrations/2026_09_25_000000_create_tasks_table.php
+@@ -0,0 +1,25 @@
++<?php
++
++use Illuminate\Database\Migrations\Migration;
++use Illuminate\Database\Schema\Blueprint;
++use Illuminate\Support\Facades\Schema;
++
++return new class extends Migration
++{
++    public function up(): void
++    {
++        Schema::create('tasks', function (Blueprint $table): void {
++            $table->id();
++            $table->string('task_name');
++            $table->text('description')->nullable();
++            $table->enum('status', ['Pending', 'Completed'])->default('Pending');
++            $table->date('due_date');
++            $table->timestamps();
++        });
++    }
++
++    public function down(): void
++    {
++        Schema::dropIfExists('tasks');
++    }
++};
+diff --git a/task-manager/database/seeders/DatabaseSeeder.php b/database/seeders/DatabaseSeeder.php
+similarity index 100%
+rename from task-manager/database/seeders/DatabaseSeeder.php
+rename to database/seeders/DatabaseSeeder.php
+diff --git a/docs/DEMONSTRATION.md b/docs/DEMONSTRATION.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..3847749f1cdd0668cd8d2f475baea89bb5d99e97
+--- /dev/null
++++ b/docs/DEMONSTRATION.md
+@@ -0,0 +1,115 @@
++# Demonstration guide
++
++## Project identity
++
++- Project: Personal Task Manager
++- Project Code: WST21-PM-2026-SF
++- Student Name: [LEAVE PLACEHOLDER FOR ME TO FILL IN]
++- Course & Year: [LEAVE PLACEHOLDER FOR ME TO FILL IN]
++- Database: SQLite
++- Practice repository: gwapo-proctor
++
++## What changed
++
++All Laravel files were moved from `task-manager/` into the repository root. Git history was retained. The two original README files were preserved under `docs/`, and the root README was rewritten for the assignment.
++
++| File | What to explain |
++| --- | --- |
++| `routes/web.php` | Named routes, HTTP methods, and controller actions |
++| `app/Http/Controllers/TaskController.php` | Validation, CRUD, status updates and redirect messages |
++| `app/Models/Task.php` | Eloquent model, allowed fields, statuses and date cast |
++| `database/migrations/2026_09_25_000000_create_tasks_table.php` | Tasks table columns and rollback |
++| `resources/views/layouts/app.blade.php` | Shared page structure and success/error messages |
++| `resources/views/tasks/index.blade.php` | Saved tasks, empty state, Edit/Delete/status controls |
++| `resources/views/tasks/create.blade.php` | Add Task form |
++| `resources/views/tasks/edit.blade.php` | Edit Task form and PUT method |
++| `resources/views/tasks/_form.blade.php` | Shared fields, CSRF, previous input and field errors |
++| `public/css/tasks.css` | Responsive layout and simple styling |
++| `.env.example` | Safe SQLite configuration with no real application key |
++| `scripts/setup.php` | Create environment/database, generate a missing key and migrate |
++| `composer.json` / `composer.lock` | Locked dependencies and setup/dev commands |
++| `database/factories/TaskFactory.php` | Task data used by automated tests |
++| `tests/Feature/TaskManagerTest.php` | Behavior and validation tests |
++| `tests/Feature/ExampleTest.php` | Starter homepage test now uses an isolated database |
++
++Laravel Boost was installed as a development dependency because the repository's existing agent instructions required it. It does not add a feature to the task manager.
++
++## How to start
++
++From the repository root:
++
++```bash
++composer run setup
++php artisan serve --host=0.0.0.0 --port=8000
++```
++
++Open http://localhost:8000 locally. In Codespaces, open port 8000 in the Ports panel. Its address is `https://YOUR-CODESPACE-NAME-8000.app.github.dev`; use the exact URL shown by Codespaces. Keep the forwarded port private.
++
++## Explain the MVC flow
++
++**Route → Controller → Model → Database → Blade**
++
++- **Route** receives the browser request and sends it to the appropriate controller.
++- **Controller** handles application logic, validates submitted data and communicates with the model.
++- **Model** represents Task data and communicates with the database through Eloquent.
++- **Database** stores the tasks in the SQLite file.
++- **Blade** displays the task data and forms to the user.
++
++On a write, the controller redirects after saving. The redirected list request then reads the database and renders Blade. This avoids resubmitting the previous form when the list is refreshed.
++
++## Explain each required feature
++
++1. **Add:** `create()` displays the form; POST `/tasks` calls `store()`. It validates the fields and uses `Task::create()` to insert a row.
++2. **View:** `index()` queries all tasks, newest first, and passes them to `tasks.index`.
++3. **Edit:** `edit()` loads the selected task into the form. PUT `/tasks/{task}` calls `update()`, validates and saves the changes.
++4. **Delete:** the form sends DELETE `/tasks/{task}` and `destroy()` deletes that record.
++5. **Update Status:** the button sends PATCH `/tasks/{task}/status` with the desired status. `updateStatus()` validates the status and updates only that field. Pressing the new button reverses the change.
++
++Laravel's route model binding finds a task from `{task}`. An unknown ID produces a 404. `@csrf` protects form submissions. `@method` lets POST forms express PUT, PATCH and DELETE. Blade's `{{ ... }}` escapes task text so it displays as text rather than HTML.
++
++## Suggested live demonstration
++
++1. Show the empty list and click Add Task.
++2. Enter a task name, optional description and due date. Save it.
++3. Show the saved task and success message.
++4. Edit the name and due date; save the changes.
++5. Mark Completed, then Mark Pending.
++6. Try an empty required field and explain validation.
++7. Delete the demonstration task and show the empty list again.
++8. Show `routes/web.php`, the controller, model, migration and Blade form in that order.
++
++## Commands used during implementation
++
++Equivalent ordinary terminal commands are listed below. On the local Windows build, PHP and Composer were invoked through downloaded portable runtime paths because they were not installed globally.
++
++```bash
++git clone https://github.com/vanarcaso/gwapo-proctor.git
++composer require laravel/boost --dev --no-interaction --prefer-dist
++php artisan boost:install --guidelines --no-interaction
++php artisan make:model Task --factory --no-interaction
++php artisan make:controller TaskController --no-interaction
++php artisan make:test TaskManagerTest --phpunit --no-interaction
++php scripts/setup.php
++composer run setup
++php artisan route:list --except-vendor
++php artisan test --compact
++composer validate
++composer check-platform-reqs
++php artisan serve --host=127.0.0.1 --port=8000 --no-reload
++```
++
++`scripts/setup.php` executed `php artisan config:clear`, `php artisan key:generate --no-interaction` when needed, and `php artisan migrate --no-interaction`. Laravel Pint formatted changed PHP files. Git status and staged diff checks were used before delivery. Files were moved and edited locally; no GitHub commit or push was made.
++
++## Verification
++
++- PHP 8.5.11; Laravel 13.33.0; SQLite.
++- 21 automated tests passed with 124 assertions.
++- All four migrations ran successfully, including the tasks migration.
++- Eight application routes resolve to `TaskController` methods.
++- Browser checks: empty list, add, saved task, edit, Pending → Completed → Pending.
++- Responsive check: 390px viewport has no horizontal overflow.
++- Live HTTP checks: list and CSS load, validation errors display, deletion succeeds, missing CSRF tokens are rejected on create/update/status/delete.
++- Re-running setup preserves the existing environment and reports no outstanding migrations.
++- Test-only task data was removed after checks.
++
++This is a single-user school demonstration with no authentication. No login, API, categories, search, notifications or other extra application features were added.
+diff --git a/task-manager/README.md b/docs/LARAVEL-README.md
+similarity index 100%
+rename from task-manager/README.md
+rename to docs/LARAVEL-README.md
+diff --git a/docs/ORIGINAL-README.md b/docs/ORIGINAL-README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..3587d67b4d8d38bb1f8a7fdc2c7524b76155e876
+--- /dev/null
++++ b/docs/ORIGINAL-README.md
+@@ -0,0 +1 @@
++# gwapo-proctor
+\ No newline at end of file
+diff --git a/task-manager/package.json b/package.json
+similarity index 100%
+rename from task-manager/package.json
+rename to package.json
+diff --git a/task-manager/phpunit.xml b/phpunit.xml
+similarity index 100%
+rename from task-manager/phpunit.xml
+rename to phpunit.xml
+diff --git a/task-manager/public/.htaccess b/public/.htaccess
+similarity index 100%
+rename from task-manager/public/.htaccess
+rename to public/.htaccess
+diff --git a/public/css/tasks.css b/public/css/tasks.css
+new file mode 100644
+index 0000000000000000000000000000000000000000..41cf152b216169c0a4f2f20d358b05747c10164f
+--- /dev/null
++++ b/public/css/tasks.css
+@@ -0,0 +1,49 @@
++:root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172b3a; background: #f4f6f8; }
++* { box-sizing: border-box; }
++body { margin: 0; line-height: 1.5; }
++.container { width: min(920px, calc(100% - 40px)); margin-inline: auto; }
++.site-header { background: #fff; border-bottom: 1px solid #dfe5eb; }
++.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 76px; }
++.brand { color: #173e54; text-decoration: none; font-size: 1.08rem; font-weight: 750; }
++.project-label { color: #596776; font-size: .75rem; }
++main { padding-block: 32px 64px; }
++.page-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; }
++h1 { margin: 0 0 6px; font-size: clamp(1.8rem, 5vw, 2.3rem); line-height: 1.2; letter-spacing: -.04em; }
++h2 { margin: 0; font-size: 1.13rem; overflow-wrap: anywhere; }
++p { margin: 0; }
++.page-heading p, .empty-state p, .task-count { color: #596776; }
++.panel { background: #fff; border: 1px solid #dfe5eb; border-radius: 12px; padding: 24px; }
++.task-list { display: grid; gap: 16px; }
++.task-count { font-size: .9rem; margin-bottom: 14px; }
++.task-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
++.badge { flex-shrink: 0; padding: 4px 10px; border-radius: 20px; font-size: .76rem; font-weight: 650; }
++.pending { background: #fff1cf; color: #785300; }
++.completed { background: #dff4e8; color: #195b3b; }
++.description { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 12px; color: #445564; }
++.due-date { margin-block: 16px; color: #596776; font-size: .85rem; }
++.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
++.actions form { margin: 0; }
++.button { display: inline-flex; justify-content: center; align-items: center; min-height: 42px; padding: 9px 16px; background: #17614f; color: #fff; border: 1px solid transparent; border-radius: 7px; font: inherit; font-size: .88rem; font-weight: 650; text-decoration: none; cursor: pointer; }
++.button:hover { background: #104a3c; }
++.secondary { background: #fff; border-color: #cbd5de; color: #254557; }
++.secondary:hover { background: #f0f4f7; }
++.danger { background: #fff; color: #ac2738; border-color: #edc8cd; }
++.danger:hover { background: #fff0f1; }
++:focus-visible { outline: 3px solid #488aca; outline-offset: 3px; }
++.empty-state { text-align: center; padding-block: 56px; }
++.empty-state p { margin: 8px 0 22px; }
++.task-form { max-width: 720px; }
++.field { margin-bottom: 22px; min-width: 0; }
++label { display: block; font-weight: 650; margin-bottom: 7px; }
++label span { color: #63717e; font-size: .8rem; font-weight: 400; }
++input, textarea, select { width: 100%; padding: 11px 12px; border: 1px solid #bac7d2; border-radius: 6px; background: #fff; color: inherit; font: inherit; min-height: 46px; }
++textarea { resize: vertical; }
++.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
++.form-actions { padding-top: 4px; }
++.notice { padding: 16px 20px; border-radius: 8px; margin-bottom: 24px; }
++.success { background: #dff4e8; color: #195b3b; }
++.error { background: #ffedef; color: #932536; }
++.notice ul { margin: 8px 0 0; padding-left: 20px; }
++.field-error { color: #a32336; margin-top: 6px; font-size: .85rem; }
++[aria-invalid="true"] { border-color: #a32336; }
++@media (max-width: 560px) { .container { width: calc(100% - 28px); } .header-inner { min-height: 68px; } .project-label { display: none; } .page-heading { align-items: flex-start; flex-direction: column; } .form-row { grid-template-columns: 1fr; gap: 0; } .panel { padding: 18px; } .task-top { flex-direction: column; gap: 8px; } }
+diff --git a/task-manager/public/favicon.ico b/public/favicon.ico
+similarity index 100%
+rename from task-manager/public/favicon.ico
+rename to public/favicon.ico
+diff --git a/task-manager/public/index.php b/public/index.php
+similarity index 100%
+rename from task-manager/public/index.php
+rename to public/index.php
+diff --git a/task-manager/public/robots.txt b/public/robots.txt
+similarity index 100%
+rename from task-manager/public/robots.txt
+rename to public/robots.txt
+diff --git a/task-manager/resources/css/app.css b/resources/css/app.css
+similarity index 100%
+rename from task-manager/resources/css/app.css
+rename to resources/css/app.css
+diff --git a/task-manager/resources/js/app.js b/resources/js/app.js
+similarity index 100%
+rename from task-manager/resources/js/app.js
+rename to resources/js/app.js
+diff --git a/resources/views/layouts/app.blade.php b/resources/views/layouts/app.blade.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..77721cef2ba475566241695927a84331fe8a32ee
+--- /dev/null
++++ b/resources/views/layouts/app.blade.php
+@@ -0,0 +1,33 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="utf-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++    <title>@yield('title', 'My Tasks') · Personal Task Manager</title>
++    <link rel="stylesheet" href="{{ asset('css/tasks.css') }}">
++</head>
++<body>
++    <header class="site-header">
++        <div class="container header-inner">
++            <a class="brand" href="{{ route('tasks.index') }}">Personal Task Manager</a>
++            <span class="project-label">WST21-PM-2026-SF</span>
++        </div>
++    </header>
++    <main class="container">
++        @if (session('success'))
++            <div class="notice success" role="status">{{ session('success') }}</div>
++        @endif
++        @if ($errors->any())
++            <div class="notice error" role="alert">
++                <strong>Please correct the following:</strong>
++                <ul>
++                    @foreach ($errors->all() as $error)
++                        <li>{{ $error }}</li>
++                    @endforeach
++                </ul>
++            </div>
++        @endif
++        @yield('content')
++    </main>
++</body>
++</html>
+diff --git a/resources/views/tasks/_form.blade.php b/resources/views/tasks/_form.blade.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..c11904b1a60e5f66d391bdcde4684c7b5b3a762b
+--- /dev/null
++++ b/resources/views/tasks/_form.blade.php
+@@ -0,0 +1,31 @@
++@csrf
++<div class="field">
++    <label for="task_name">Task name <span>(required)</span></label>
++    <input id="task_name" name="task_name" type="text" value="{{ old('task_name', $task->task_name) }}" maxlength="255" required @error('task_name') aria-invalid="true" aria-describedby="task_name-error" @enderror>
++    @error('task_name') <p class="field-error" id="task_name-error">{{ $message }}</p> @enderror
++</div>
++<div class="field">
++    <label for="description">Description <span>(optional)</span></label>
++    <textarea id="description" name="description" rows="5" maxlength="5000" @error('description') aria-invalid="true" aria-describedby="description-error" @enderror>{{ old('description', $task->description) }}</textarea>
++    @error('description') <p class="field-error" id="description-error">{{ $message }}</p> @enderror
++</div>
++<div class="form-row">
++    <div class="field">
++        <label for="status">Status <span>(required)</span></label>
++        <select id="status" name="status" required @error('status') aria-invalid="true" aria-describedby="status-error" @enderror>
++            @foreach (\App\Models\Task::STATUSES as $status)
++                <option value="{{ $status }}" @selected(old('status', $task->status) === $status)>{{ $status }}</option>
++            @endforeach
++        </select>
++        @error('status') <p class="field-error" id="status-error">{{ $message }}</p> @enderror
++    </div>
++    <div class="field">
++        <label for="due_date">Due date <span>(required)</span></label>
++        <input id="due_date" name="due_date" type="date" value="{{ old('due_date', $task->due_date?->format('Y-m-d')) }}" required @error('due_date') aria-invalid="true" aria-describedby="due_date-error" @enderror>
++        @error('due_date') <p class="field-error" id="due_date-error">{{ $message }}</p> @enderror
++    </div>
++</div>
++<div class="actions form-actions">
++    <button class="button" type="submit">{{ $submitLabel }}</button>
++    <a class="button secondary" href="{{ route('tasks.index') }}">Cancel</a>
++</div>
+diff --git a/resources/views/tasks/create.blade.php b/resources/views/tasks/create.blade.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea064b90b07d1bdab803e5364c7e52754d418141
+--- /dev/null
++++ b/resources/views/tasks/create.blade.php
+@@ -0,0 +1,8 @@
++@extends('layouts.app')
++@section('title', 'Add Task')
++@section('content')
++    <div class="page-heading"><div><h1>Add Task</h1><p>Give your task a name and a due date.</p></div></div>
++    <form class="panel task-form" action="{{ route('tasks.store') }}" method="POST">
++        @include('tasks._form', ['submitLabel' => 'Add Task'])
++    </form>
++@endsection
+diff --git a/resources/views/tasks/edit.blade.php b/resources/views/tasks/edit.blade.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..2523c9c7ff7447e6f7f05952810dcf030b729fd8
+--- /dev/null
++++ b/resources/views/tasks/edit.blade.php
+@@ -0,0 +1,9 @@
++@extends('layouts.app')
++@section('title', 'Edit Task')
++@section('content')
++    <div class="page-heading"><div><h1>Edit Task</h1><p>Update the details below, then save your changes.</p></div></div>
++    <form class="panel task-form" action="{{ route('tasks.update', $task) }}" method="POST">
++        @method('PUT')
++        @include('tasks._form', ['submitLabel' => 'Save Changes'])
++    </form>
++@endsection
+diff --git a/resources/views/tasks/index.blade.php b/resources/views/tasks/index.blade.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..1903e91869186c5b2de5d4864551294037ece60f
+--- /dev/null
++++ b/resources/views/tasks/index.blade.php
+@@ -0,0 +1,48 @@
++@extends('layouts.app')
++@section('title', 'My Tasks')
++@section('content')
++    <div class="page-heading">
++        <div>
++            <h1>My Tasks</h1>
++            <p>Keep track of what needs to get done.</p>
++        </div>
++        <a class="button" href="{{ route('tasks.create') }}">+ Add Task</a>
++    </div>
++    @if ($tasks->isEmpty())
++        <section class="panel empty-state">
++            <h2>No tasks yet</h2>
++            <p>Add your first task to get started.</p>
++            <a class="button" href="{{ route('tasks.create') }}">Add Task</a>
++        </section>
++    @else
++        <p class="task-count">{{ $tasks->count() }} {{ $tasks->count() === 1 ? 'task' : 'tasks' }} · {{ $tasks->where('status', 'Completed')->count() }} completed</p>
++        <div class="task-list">
++            @foreach ($tasks as $task)
++                <article class="panel task-card">
++                    <div class="task-top">
++                        <h2>{{ $task->task_name }}</h2>
++                        <span class="badge {{ $task->status === 'Completed' ? 'completed' : 'pending' }}">{{ $task->status }}</span>
++                    </div>
++                    @if ($task->description)
++                        <p class="description">{{ $task->description }}</p>
++                    @endif
++                    <p class="due-date">Due <time datetime="{{ $task->due_date->format('Y-m-d') }}">{{ $task->due_date->format('M j, Y') }}</time></p>
++                    <div class="actions">
++                        <form action="{{ route('tasks.status', $task) }}" method="POST">
++                            @csrf
++                            @method('PATCH')
++                            <input type="hidden" name="status" value="{{ $task->status === 'Pending' ? 'Completed' : 'Pending' }}">
++                            <button class="button secondary" type="submit">{{ $task->status === 'Pending' ? 'Mark Completed' : 'Mark Pending' }}</button>
++                        </form>
++                        <a class="button secondary" href="{{ route('tasks.edit', $task) }}">Edit</a>
++                        <form action="{{ route('tasks.destroy', $task) }}" method="POST">
++                            @csrf
++                            @method('DELETE')
++                            <button class="button danger" type="submit">Delete</button>
++                        </form>
++                    </div>
++                </article>
++            @endforeach
++        </div>
++    @endif
++@endsection
+diff --git a/task-manager/resources/views/welcome.blade.php b/resources/views/welcome.blade.php
+similarity index 100%
+rename from task-manager/resources/views/welcome.blade.php
+rename to resources/views/welcome.blade.php
+diff --git a/task-manager/routes/console.php b/routes/console.php
+similarity index 100%
+rename from task-manager/routes/console.php
+rename to routes/console.php
+diff --git a/routes/web.php b/routes/web.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..e2428fdb3c2c27d7efa505a97eacb8d57cc63368
+--- /dev/null
++++ b/routes/web.php
+@@ -0,0 +1,8 @@
++<?php
++
++use App\Http\Controllers\TaskController;
++use Illuminate\Support\Facades\Route;
++
++Route::get('/', [TaskController::class, 'index'])->name('home');
++Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status');
++Route::resource('tasks', TaskController::class)->except(['show']);
+diff --git a/scripts/setup.php b/scripts/setup.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..2c763cc78e67d6df85eb6fafc83987fa7c1b0263
+--- /dev/null
++++ b/scripts/setup.php
+@@ -0,0 +1,30 @@
++<?php
++
++// Run after composer install. Safe to repeat: existing data and keys are retained.
++$root = dirname(__DIR__);
++chdir($root);
++
++if (! file_exists('.env') && ! copy('.env.example', '.env')) {
++    fwrite(STDERR, "Could not create .env.\n");
++    exit(1);
++}
++
++if (! file_exists('database/database.sqlite') && ! touch('database/database.sqlite')) {
++    fwrite(STDERR, "Could not create the SQLite database.\n");
++    exit(1);
++}
++
++$commands = ['config:clear'];
++if (! preg_match('/^APP_KEY=.+$/m', file_get_contents('.env'))) {
++    $commands[] = 'key:generate --no-interaction';
++}
++$commands[] = 'migrate --no-interaction';
++
++foreach ($commands as $command) {
++    passthru(escapeshellarg(PHP_BINARY).' artisan '.$command, $exitCode);
++    if ($exitCode !== 0) {
++        exit($exitCode);
++    }
++}
++
++echo "Setup complete. Run: php artisan serve --host=0.0.0.0 --port=8000\n";
+diff --git a/task-manager/storage/app/.gitignore b/storage/app/.gitignore
+similarity index 100%
+rename from task-manager/storage/app/.gitignore
+rename to storage/app/.gitignore
+diff --git a/task-manager/storage/app/private/.gitignore b/storage/app/private/.gitignore
+similarity index 100%
+rename from task-manager/storage/app/private/.gitignore
+rename to storage/app/private/.gitignore
+diff --git a/task-manager/storage/app/public/.gitignore b/storage/app/public/.gitignore
+similarity index 100%
+rename from task-manager/storage/app/public/.gitignore
+rename to storage/app/public/.gitignore
+diff --git a/task-manager/storage/framework/.gitignore b/storage/framework/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/.gitignore
+rename to storage/framework/.gitignore
+diff --git a/task-manager/storage/framework/cache/.gitignore b/storage/framework/cache/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/cache/.gitignore
+rename to storage/framework/cache/.gitignore
+diff --git a/task-manager/storage/framework/cache/data/.gitignore b/storage/framework/cache/data/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/cache/data/.gitignore
+rename to storage/framework/cache/data/.gitignore
+diff --git a/task-manager/storage/framework/sessions/.gitignore b/storage/framework/sessions/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/sessions/.gitignore
+rename to storage/framework/sessions/.gitignore
+diff --git a/task-manager/storage/framework/testing/.gitignore b/storage/framework/testing/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/testing/.gitignore
+rename to storage/framework/testing/.gitignore
+diff --git a/task-manager/storage/framework/views/.gitignore b/storage/framework/views/.gitignore
+similarity index 100%
+rename from task-manager/storage/framework/views/.gitignore
+rename to storage/framework/views/.gitignore
+diff --git a/task-manager/storage/logs/.gitignore b/storage/logs/.gitignore
+similarity index 100%
+rename from task-manager/storage/logs/.gitignore
+rename to storage/logs/.gitignore
+diff --git a/task-manager/.env.example b/task-manager/.env.example
+deleted file mode 100644
+index 40bb13b35107e3c9ffea8f3f9053f67fc57f0093..0000000000000000000000000000000000000000
+--- a/task-manager/.env.example
++++ /dev/null
+@@ -1,65 +0,0 @@
+-APP_NAME=Laravel
+-APP_ENV=local
+-APP_KEY=
+-APP_DEBUG=true
+-APP_URL=http://localhost:8000
+-
+-APP_LOCALE=en
+-APP_FALLBACK_LOCALE=en
+-APP_FAKER_LOCALE=en_US
+-
+-APP_MAINTENANCE_DRIVER=file
+-# APP_MAINTENANCE_STORE=database
+-
+-# PHP_CLI_SERVER_WORKERS=4
+-
+-BCRYPT_ROUNDS=12
+-
+-LOG_CHANNEL=stack
+-LOG_STACK=single
+-LOG_DEPRECATIONS_CHANNEL=null
+-LOG_LEVEL=debug
+-
+-DB_CONNECTION=sqlite
+-# DB_HOST=127.0.0.1
+-# DB_PORT=3306
+-# DB_DATABASE=laravel
+-# DB_USERNAME=root
+-# DB_PASSWORD=
+-
+-SESSION_DRIVER=database
+-SESSION_LIFETIME=120
+-SESSION_ENCRYPT=false
+-SESSION_PATH=/
+-SESSION_DOMAIN=null
+-
+-BROADCAST_CONNECTION=log
+-FILESYSTEM_DISK=local
+-QUEUE_CONNECTION=database
+-
+-CACHE_STORE=database
+-# CACHE_PREFIX=
+-
+-MEMCACHED_HOST=127.0.0.1
+-
+-REDIS_CLIENT=phpredis
+-REDIS_HOST=127.0.0.1
+-REDIS_PASSWORD=null
+-REDIS_PORT=6379
+-
+-MAIL_MAILER=log
+-MAIL_SCHEME=null
+-MAIL_HOST=127.0.0.1
+-MAIL_PORT=2525
+-MAIL_USERNAME=null
+-MAIL_PASSWORD=null
+-MAIL_FROM_ADDRESS="hello@example.com"
+-MAIL_FROM_NAME="${APP_NAME}"
+-
+-AWS_ACCESS_KEY_ID=
+-AWS_SECRET_ACCESS_KEY=
+-AWS_DEFAULT_REGION=us-east-1
+-AWS_BUCKET=
+-AWS_USE_PATH_STYLE_ENDPOINT=false
+-
+-VITE_APP_NAME="${APP_NAME}"
+diff --git a/task-manager/AGENTS.md b/task-manager/AGENTS.md
+deleted file mode 100644
+index b80472fdb9e718550f48fc9d4aa849f401ea2cc2..0000000000000000000000000000000000000000
+--- a/task-manager/AGENTS.md
++++ /dev/null
+@@ -1,47 +0,0 @@
+-<laravel-boost-guidelines>
+-# Laravel Application
+-
+-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+-
+-## Prerequisites
+-
+-Verify that PHP and Composer are available:
+-
+-```sh
+-php -v
+-composer -V
+-```
+-
+-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
+-
+-macOS:
+-
+-```sh
+-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
+-```
+-
+-Windows PowerShell:
+-
+-```powershell
+-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
+-```
+-
+-Linux:
+-
+-```sh
+-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
+-```
+-
+-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
+-
+-## Agent Setup
+-
+-Install Laravel Boost from the application root before making application changes:
+-
+-```sh
+-composer require laravel/boost --dev
+-php artisan boost:install
+-```
+-
+-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
+-</laravel-boost-guidelines>
+diff --git a/task-manager/routes/web.php b/task-manager/routes/web.php
+deleted file mode 100644
+index 86a06c53eb430eeef17e0fe90f7ba997952a96c6..0000000000000000000000000000000000000000
+--- a/task-manager/routes/web.php
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?php
+-
+-use Illuminate\Support\Facades\Route;
+-
+-Route::get('/', function () {
+-    return view('welcome');
+-});
+diff --git a/task-manager/tests/Feature/ExampleTest.php b/tests/Feature/ExampleTest.php
+similarity index 79%
+rename from task-manager/tests/Feature/ExampleTest.php
+rename to tests/Feature/ExampleTest.php
+index 8364a84e2b7eea9f007e99a5d3333273fe30bf8a..22ef0c599c0a71232c7b2b1ff5c5921e0392c50f 100644
+--- a/task-manager/tests/Feature/ExampleTest.php
++++ b/tests/Feature/ExampleTest.php
+@@ -2,11 +2,13 @@
+ 
+ namespace Tests\Feature;
+ 
+-// use Illuminate\Foundation\Testing\RefreshDatabase;
++use Illuminate\Foundation\Testing\RefreshDatabase;
+ use Tests\TestCase;
+ 
+ class ExampleTest extends TestCase
+ {
++    use RefreshDatabase;
++
+     /**
+      * A basic test example.
+      */
+diff --git a/tests/Feature/TaskManagerTest.php b/tests/Feature/TaskManagerTest.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..f5002340f9927b4096a7f5845ce44def144245eb
+--- /dev/null
++++ b/tests/Feature/TaskManagerTest.php
+@@ -0,0 +1,123 @@
++<?php
++
++namespace Tests\Feature;
++
++use App\Models\Task;
++use Illuminate\Foundation\Testing\RefreshDatabase;
++use PHPUnit\Framework\Attributes\DataProvider;
++use Tests\TestCase;
++
++class TaskManagerTest extends TestCase
++{
++    use RefreshDatabase;
++
++    public function test_empty_task_list_and_add_form_load(): void
++    {
++        $this->get('/')->assertOk()->assertSee('No tasks yet');
++        $this->get('/tasks')->assertOk()->assertSee('Add Task');
++        $this->get('/tasks/create')->assertOk()->assertSee('name="_token"', false);
++    }
++
++    public function test_task_is_saved_and_displayed(): void
++    {
++        $data = Task::factory()->raw(['task_name' => 'Prepare school demonstration']);
++        $this->post('/tasks', $data)->assertRedirect(route('tasks.index'))->assertSessionHas('success');
++        $this->assertDatabaseHas('tasks', [...$data, 'due_date' => '2026-10-01 00:00:00']);
++        $this->get('/tasks')->assertOk()->assertSee('Prepare school demonstration')->assertSee('Pending');
++    }
++
++    public function test_task_can_be_edited(): void
++    {
++        $task = Task::factory()->create();
++        $this->get('/tasks/'.$task->id.'/edit')->assertOk()->assertSee($task->task_name);
++        $data = ['task_name' => 'Revised task', 'description' => 'Updated details', 'status' => 'Completed', 'due_date' => '2026-11-15'];
++        $this->put('/tasks/'.$task->id, $data)->assertRedirect(route('tasks.index'))->assertSessionHas('success');
++        $this->assertDatabaseHas('tasks', ['id' => $task->id, ...$data, 'due_date' => '2026-11-15 00:00:00']);
++    }
++
++    public function test_status_changes_both_ways_without_changing_other_fields(): void
++    {
++        $task = Task::factory()->create();
++        foreach (['Completed', 'Pending'] as $status) {
++            $this->patch('/tasks/'.$task->id.'/status', ['status' => $status, 'task_name' => 'Unwanted rename'])
++                ->assertRedirect(route('tasks.index'))->assertSessionHas('success');
++            $this->assertDatabaseHas('tasks', ['id' => $task->id, 'status' => $status, 'task_name' => $task->task_name]);
++        }
++    }
++
++    public function test_task_can_be_deleted(): void
++    {
++        $task = Task::factory()->create();
++        $this->delete('/tasks/'.$task->id)->assertRedirect(route('tasks.index'))->assertSessionHas('success');
++        $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
++        $this->get('/tasks')->assertSee('No tasks yet');
++    }
++
++    #[DataProvider('invalidInputs')]
++    public function test_invalid_input_is_rejected_on_create_and_update(string $field, mixed $value): void
++    {
++        $data = Task::factory()->raw([$field => $value]);
++        $this->from('/tasks/create')->post('/tasks', $data)
++            ->assertRedirect('/tasks/create')->assertSessionHasErrors($field);
++        $this->assertDatabaseCount('tasks', 0);
++
++        $task = Task::factory()->create();
++        $original = $task->getAttributes();
++        $this->put('/tasks/'.$task->id, $data)->assertSessionHasErrors($field);
++        $this->assertEquals($original, $task->fresh()->getAttributes());
++    }
++
++    public static function invalidInputs(): array
++    {
++        return [
++            'missing name' => ['task_name', ''],
++            'whitespace name' => ['task_name', '   '],
++            'long name' => ['task_name', str_repeat('a', 256)],
++            'long description' => ['description', str_repeat('a', 5001)],
++            'missing status' => ['status', ''],
++            'invalid status' => ['status', 'In Progress'],
++            'missing date' => ['due_date', ''],
++            'invalid date' => ['due_date', '2026-02-30'],
++            'wrong date format' => ['due_date', '10/01/2026'],
++        ];
++    }
++
++    public function test_invalid_status_update_is_rejected(): void
++    {
++        $task = Task::factory()->create();
++        $this->patch('/tasks/'.$task->id.'/status', ['status' => 'Unknown'])->assertSessionHasErrors('status');
++        $this->patch('/tasks/'.$task->id.'/status', [])->assertSessionHasErrors('status');
++        $this->assertSame('Pending', $task->fresh()->status);
++    }
++
++    public function test_description_is_optional_and_past_dates_are_allowed(): void
++    {
++        $data = Task::factory()->raw(['description' => '', 'due_date' => '2020-01-01']);
++        $this->post('/tasks', $data)->assertSessionHasNoErrors();
++        $this->assertDatabaseHas('tasks', ['description' => null, 'due_date' => '2020-01-01 00:00:00']);
++    }
++
++    public function test_task_content_is_escaped(): void
++    {
++        Task::factory()->create(['task_name' => '<script>alert(1)</script>', 'description' => '<img src=x onerror=alert(1)>']);
++        $this->get('/tasks')->assertOk()->assertSee('&lt;script&gt;', false)
++            ->assertDontSee('<script>alert(1)</script>', false)
++            ->assertDontSee('<img src=x onerror=alert(1)>', false);
++    }
++
++    public function test_missing_tasks_return_404(): void
++    {
++        $this->get('/tasks/999/edit')->assertNotFound();
++        $this->put('/tasks/999', Task::factory()->raw())->assertNotFound();
++        $this->patch('/tasks/999/status', ['status' => 'Completed'])->assertNotFound();
++        $this->delete('/tasks/999')->assertNotFound();
++    }
++
++    public function test_get_requests_cannot_delete_or_change_status(): void
++    {
++        $task = Task::factory()->create();
++        $this->get('/tasks/'.$task->id)->assertMethodNotAllowed();
++        $this->get('/tasks/'.$task->id.'/status')->assertMethodNotAllowed();
++        $this->assertDatabaseHas('tasks', ['id' => $task->id, 'status' => 'Pending']);
++    }
++}
+diff --git a/task-manager/tests/TestCase.php b/tests/TestCase.php
+similarity index 100%
+rename from task-manager/tests/TestCase.php
+rename to tests/TestCase.php
+diff --git a/task-manager/tests/Unit/ExampleTest.php b/tests/Unit/ExampleTest.php
+similarity index 100%
+rename from task-manager/tests/Unit/ExampleTest.php
+rename to tests/Unit/ExampleTest.php
+diff --git a/task-manager/vite.config.js b/vite.config.js
+similarity index 100%
+rename from task-manager/vite.config.js
+rename to vite.config.js
